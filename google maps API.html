@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Google Maps API</title>
+    <link href="https://fonts.googleapis.com/css?family=Rancho|Lobster+Two|Rock+Salt" rel="stylesheet">
+    <style>
+        #map {
+            height: 450px;
+            width: 50%;
+            margin-right: 7%;
+        }
+        .flex{
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+<div align="center" style="font-size: 30px; font-family: 'Rock Salt', cursive;">My Google Maps </div>
+<div class="flex">
+    <div id="map"></div>
+    <div id="result" style="font-family: 'Lobster Two', cursive; font-size: 20px">Enter the place you want to search for
+<br>
+        <input list="places" name="place" id="search" style="width:50% ; height:20px ">
+        <br>
+        <datalist id="places">
+            <option value="accounting"></option>
+<option value="airport"></option>
+            <option value="amusement_park">
+<option value="atm"></option>
+            <option value="bakery"></option>
+<option value="bank"></option>
+            <option value="bar"></option>
+<option value="beauty_salon"></option>
+            <option value="bicycle_store"></option>
+<option value="book_store"></option>
+            <option value="bowling_alley"></option>
+<option value="bus_station"></option>
+            <option value="cafe"></option>
+<option value="campground"></option>
+            <option value="car_dealer"></option>
+<option value="car_rental"></option>
+            <option value="car_repair"></option>
+<option value="car_wash"></option>
+            <option value="casino"></option>
+<option value="cemetery"></option>
+            <option value="church"></option>
+<option value="city_hall"></option>
+            <option value="clothing_store"></option>
+<option value="convenience_store"></option>
+            <option value="courthouse"></option>
+<option value="dentist"></option>
+            <option value="department_store"></option>
+<option value="doctor"></option>
+            <option value="electrician"></option>
+<option value="electronics_store"></option>
+            <option value="embassy"></option>
+<option value="fire_station"></option>
+            <option value="florist"></option>
+<option value="funeral_home"></option>
+            <option value="furniture_store"></option>
+<option value="gas_station"></option>
+            <option value="gym"></option>
+<option value="hair_care"></option>
+            <option value="hardware_store"></option>
+<option value="hindu_temple"></option>
+            <option value="home_goods_store"></option>
+<option value="hospital"></option>
+            <option value="insurance_agency"></option>
+<option value="jewelry_store"></option>
+            <option value="laundry"></option>
+<option value="lawyer"></option>
+            <option value="library"></option>
+<option value="liquor_store"></option>
+            <option value="local_government_office"></option>
+<option value="locksmith"></option>
+            <option value="lodging"></option>
+<option value="meal_delivery"></option>
+            <option value="meal_takeaway"></option>
+<option value="mosque"></option>
+            <option value="movie_rental"></option>
+<option value="movie_theater"></option>
+            <option value="moving_company"></option>
+<option value="museum"></option>
+            <option value="night_club"></option>
+<option value="painter"></option>
+            <option value="park"></option>
+<option value="parking"></option>
+            <option value="pet_store"></option>
+<option value="pharmacy"></option>
+            <option value="physiotherapist"></option>
+<option value="plumber"></option>
+            <option value="police"></option>
+<option value="post_office"></option>
+            <option value="real_estate_agency"></option>
+<option value="restaurant"></option>
+            <option value="roofing_contractor"></option>
+<option value="rv_park"></option>
+            <option value="school"></option>
+<option value="shoe_store"></option>
+            <option value="shopping_mall"></option>
+<option value="spa"></option>
+            <option value="stadium"></option>
+<option value="storage"></option>
+            <option value="store"></option>
+<option value="subway_station"></option>
+            <option value="veterinary_care"></option>
+<option value="zoo">
+
+        </datalist>
+
+
+        <br>
+
+        <div id="result2" style="font-family: 'Lobster Two', cursive; font-size: 20px">Enter the radius you want to search within(in meters)</div>
+        <input id="radius" type="text" style="width:50% ; height:20px ">
+        <br>
+        <br>
+        <input type="submit" style="width:100px ; height:20px ;font-size: 15px; margin-left: 65%" >
+        <br>
+        <br>
+        <div  id="result11" style="font-size: 30px; color: midnightblue; font-family: fantasy "></div>
+        <div  id="result1" style="font-size: 20px; font-family: fantasy"></div>
+
+
+    </div>
+    </div>
+<script src="jquery.js"></script>
+<script>
+    function initMap() {
+        var uluru = {lat: 20.5937, lng: 78.9629};
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 5,
+            center: uluru
+        });
+        var marker = new google.maps.Marker({
+            position: uluru,
+            map: map,
+            animation: google.maps.Animation.DROP
+        });
+        google.maps.event.addListener(map, 'click', function (event) {
+            alert("Latitude: " + event.latLng.lat() + " " + ", longitude: " + event.latLng.lng());
+            var marker = new google.maps.Marker({
+                position: {lat: event.latLng.lat(), lng: event.latLng.lng()},
+                map: map,
+                animation: google.maps.Animation.DROP
+            });
+            let xhttp = new XMLHttpRequest();
+            let search=document.getElementById('search').value;
+            let radius=document.getElementById('radius').value;
+            console.log(search);
+            console.log(radius);
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200)
+                {
+                    let x=JSON.parse(this.responseText);
+                    console.log(x.results.length);
+                    console.log(x);
+                    let list="";
+                    for(let i=0;i<x.results.length;i++)
+                    {
+                        list+=`<div>${i+1}) &nbsp ${x.results[i].name}</div>`;
+                        //list+=`<div>${i+1}) &nbsp ${x.results[i].name}${x.results[i].photos[0].html_attributions[0]}</div>`;
+
+                    }
+                    if(x.results.length){
+                        document.getElementById('result11').innerHTML=`The results are`;
+                    }
+
+                    document.getElementById("result1").innerHTML =`${list}`;
+
+                }
+            };
+            xhttp.open("GET", `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${event.latLng.lat()},${event.latLng.lng()}&radius=${radius}&type=${search}&key=AIzaSyCQxKfVYtZjExL8jJUabnmfwS0Md_Y1OYU`, true);
+            //  xhttp.open("GET", `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${event.latLng.lat()},${event.latLng.lng()}&radius=500&type=atm&key=AIzaSyCQxKfVYtZjExL8jJUabnmfwS0Md_Y1OYU`, true);
+
+            xhttp.send();
+        });
+    }
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDN7kyTZHc5tutStaCpKdhIoaG9oMpsypY&callback=initMap">
+</script>
+</body>
+</html>
